@@ -39,7 +39,7 @@ def summarise4Child(text):
     fullPrompt = ''.join([summarisationPrompt, text])
     numWords = len(re.findall(r'\w+', text))
     tokens = numWords // 2          # output summary should be no more than half the original text length
-    
+
     response = openai.Completion.create(
         model="text-davinci-003",
         prompt=fullPrompt,
