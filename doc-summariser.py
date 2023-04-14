@@ -10,6 +10,7 @@ import openai
 from dotenv import load_dotenv
 from docx import Document
 import re
+import spacy
 
 MIN_PARA_CHARS=300
 
@@ -18,13 +19,26 @@ load_dotenv()
 openai.api_key = os.getenv("OPENAI_API_KEY")
 openai.organization = os.getenv("OPENAI_ORG")
 
+nlp = spacy.load("en_core_web_sm")
+
+
+
+def returnFullSentences(text):
+    sentences = []
+    doc = nlp(text)
+    for sent in doc.sents:
+        lastChar = sent.text[-1:]
+        if lastChar in ['.', '!', '?']:
+            sentences.append(sent.text)
+
+    return ' '.join(sentences)
 
 
 def summarise4Child(text):
-    summarisationPrompt = "Summarize this paragraph for an ten year old child, using a single complete sentence:\n\n"
+    summarisationPrompt = "Summarize this paragraph for a ten year old child:\n\n"
     fullPrompt = ''.join([summarisationPrompt, text])
     numWords = len(re.findall(r'\w+', text))
-    tokens = numWords // 2
+    tokens = numWords // 2          # output summary should be no more than half the original text length
     
     response = openai.Completion.create(
         model="text-davinci-003",
@@ -36,7 +50,7 @@ def summarise4Child(text):
         presence_penalty=0.0)
     
     firstChoice = response.choices[0]
-    summary = firstChoice['text']
+    summary = returnFullSentences(firstChoice['text'])
     
     return summary
 
