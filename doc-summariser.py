@@ -20,7 +20,7 @@ openai.api_key = os.getenv("OPENAI_API_KEY")
 openai.organization = os.getenv("OPENAI_ORG")
 
 nlp = spacy.load("en_core_web_sm")
-
+stopMarks = set('?!.')
 
 
 def returnFullSentences(text):
@@ -28,7 +28,7 @@ def returnFullSentences(text):
     doc = nlp(text)
     for sent in doc.sents:
         lastChar = sent.text[-1:]
-        if lastChar in ['.', '!', '?']:
+        if lastChar in stopMarks:
             sentences.append(sent.text)
 
     return ' '.join(sentences)
