@@ -24,13 +24,8 @@ stopMarks = set('?!.')
 
 
 def returnFullSentences(text):
-    sentences = []
     doc = nlp(text)
-    for sent in doc.sents:
-        lastChar = sent.text[-1:]
-        if lastChar in stopMarks:
-            sentences.append(sent.text)
-
+    sentences = [s.text for s in doc.sents if s.text[-1:] in stopMarks]
     return ' '.join(sentences)
 
 
