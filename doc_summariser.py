@@ -1,7 +1,7 @@
-"""Summarises a Word doc for a child to be no less than 1500 words."""
-
-#!/usr/bin/env python3
+#!/usr/bin/env python
 # coding: utf-8
+
+"""Summarises a Word doc for a child to be no less than 1500 words."""
 
 import os
 import re
@@ -12,6 +12,7 @@ from docx import Document
 from dotenv import load_dotenv
 
 MIN_PARA_CHARS = 300
+GPT_MODEL = "text-davinci-003"
 
 load_dotenv()
 
@@ -65,7 +66,7 @@ def summarise_4_child(text):
     )  # output summary should be no more than half the original text length
 
     response = openai.Completion.create(
-        model="text-davinci-003",
+        model=GPT_MODEL,
         prompt=full_prompt,
         temperature=0.4,
         max_tokens=tokens,
@@ -95,7 +96,7 @@ def main():
     document = Document(file_name)
     summary_doc = []
     total_words = 0
-    p = 1
+    para_num = 1
 
     for para in document.paragraphs:
         text = para.text
@@ -105,13 +106,13 @@ def main():
             summary_words = len(re.findall(r"\w+", summary))
             total_words += summary_words
             summary_doc.append(summary)
-            print(f"P{p}: IN WORDS = {text_words}, OUT WORDS = {summary_words}")
-            p += 1
+            print(f"P{para_num}: IN WORDS = {text_words}, OUT WORDS = {summary_words}")
+            para_num += 1
 
     # now write out to a new text document
-    with open("summary.txt", "w", encoding="utf-8") as f:
-        for s in summary_doc:
-            f.write(s)
+    with open("summary.txt", "w", encoding="utf-8") as f_text:
+        for summary_text in summary_doc:
+            f_text.write(summary_text)
 
     print(f"Total of {total_words} words")
 
