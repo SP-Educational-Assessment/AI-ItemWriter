@@ -20,3 +20,4 @@ ipython_config.py
 .env
 /data
 summary.txt
+.vscode/
