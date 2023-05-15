@@ -10,4 +10,4 @@ To run the summariser, simply execute the file:
 ./doc_summariser.py
 ```
 
-The notebooks are there for test purposes.
+The notebooks are there for test purposes
